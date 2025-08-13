@@ -32,7 +32,6 @@ export default function CurrentlyReading() {
 
     return (
         <div className="currently-reading">
-            <p className="header">Current Book</p>
             {books.map(book => (
                 <div key={book.id} className="book">
                     <div className="cover">

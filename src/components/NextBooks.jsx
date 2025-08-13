@@ -60,7 +60,6 @@ export default function NextBooks() {
 
     return (
         <div className="future-books">
-            <p className="heading">Suggested Future Books</p>
             {loading ? <p>Loading...</p> : books.length === 0 ? <p>No next books saved.</p> : books.map(book => <BookCard key={book.id} book={book} />)}
         </div>
     );
