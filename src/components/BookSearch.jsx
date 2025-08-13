@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { db, collection, addDoc, serverTimestamp } from "./firebase";
+import { db, collection, addDoc, serverTimestamp } from "../firebase";
 
-export default function BookSearch() {
+export default function BookSearch({ onBookSaved }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ export default function BookSearch() {
     setSearched(true);
 
     try {
-      const apiKey = ""; // Optional
+      const apiKey = ""; // optional
       const response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10${apiKey ? `&key=${apiKey}` : ""}`
       );
@@ -48,9 +48,10 @@ export default function BookSearch() {
         status: "Save",
         timestamp: serverTimestamp(),
       });
-      alert(`Book saved to "Next Books"`);
+      alert("Book saved to Next Books");
+      if (onBookSaved) onBookSaved(); // Refresh NextBooks if needed
     } catch (error) {
-      console.error("Error saving book:", error);
+      console.error(error);
       alert("Failed to save book.");
     }
   };
@@ -77,13 +78,12 @@ export default function BookSearch() {
           <div key={book.id} style={{ display: "flex", gap: "1rem", border: "1px solid #ccc", padding: "1rem", borderRadius: "4px", alignItems: "flex-start" }}>
             <img src={book.thumbnail} alt={book.title} style={{ width: 128, objectFit: "cover" }} />
             <div style={{ flex: 1 }}>
-              <h2 style={{ margin: "0 0 0.5rem 0" }}>{book.title}</h2>
+              <h2>{book.title}</h2>
               {book.authors.length > 0 && <p><strong>Authors:</strong> {book.authors.join(", ")}</p>}
               <p><strong>Published:</strong> {book.publishedDate}</p>
               <p><strong>Pages:</strong> {book.pageCount}</p>
               {book.averageRating && <p><strong>Average Rating:</strong> {book.averageRating}</p>}
-              {book.description && <p><strong>Description:</strong> {book.description.length > 200 ? book.description.substring(0, 200) + "…" : book.description}</p>}
-
+              {book.description && <p>{book.description.length > 200 ? book.description.substring(0, 200) + "…" : book.description}</p>}
               <button onClick={() => saveBook(book)}>Save to Next Books</button>
             </div>
           </div>
