@@ -9,13 +9,13 @@ export default function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "2rem auto", padding: "1rem" }}>
-      <h1>My Book Club</h1>
+      <p className="app-title">Book Club Tracker</p>
 
-      <nav style={{ marginBottom: "2rem", display: "flex", gap: "1rem" }}>
+      <nav className="navbar">
         <button onClick={() => setPage("currentlyReading")}>Currently Reading</button>
         <button onClick={() => setPage("readBooks")}>Previously Read</button>
-        <button onClick={() => setPage("nextBooks")}>Next Books</button>
-        <button onClick={() => setPage("search")}>Search Books</button>
+        <button onClick={() => setPage("nextBooks")}>Next Book Ideas</button>
+        <button onClick={() => setPage("search")}>Search</button>
       </nav>
 
       {page === "currentlyReading" && <CurrentlyReading />}

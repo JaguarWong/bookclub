@@ -1,36 +1,52 @@
 import { useEffect, useState } from "react";
-import { db, collection, getDocs, query, where } from "../firebase";
+import { db, collection, query, where, getDocs, doc, updateDoc, serverTimestamp } from "../firebase";
 
 export default function CurrentlyReading() {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      setLoading(true);
-      const q = query(collection(db, "books"), where("status", "==", "Reading"));
-      const snapshot = await getDocs(q);
-      setBooks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setLoading(false);
+    useEffect(() => {
+        const fetchBooks = async () => {
+            setLoading(true);
+            const q = query(collection(db, "books"), where("status", "==", "Reading"));
+            const snapshot = await getDocs(q);
+            const booksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setBooks(booksData);
+            setLoading(false);
+        };
+        fetchBooks();
+    }, []);
+
+    const markRead = async (bookId) => {
+        const readDate = prompt("Enter the date you finished reading (YYYY-MM-DD):");
+        if (!readDate) return;
+
+        const bookRef = doc(db, "books", bookId);
+        await updateDoc(bookRef, { status: "Read", readDate, timestamp: serverTimestamp() });
+
+        setBooks(prevBooks => prevBooks.filter(book => book.id !== bookId));
     };
-    fetchBooks();
-  }, []);
 
-  const BookCard = ({ book }) => (
-    <div style={{ display: "flex", gap: "1rem", border: "1px solid #ccc", padding: "1rem", borderRadius: "4px" }}>
-      <img src={book.thumbnail} alt={book.title} style={{ width: 128, objectFit: "cover" }} />
-      <div>
-        <h2>{book.title}</h2>
-        {book.authors?.length > 0 && <p><strong>Authors:</strong> {book.authors.join(", ")}</p>}
-        <p><strong>Published:</strong> {book.publishedDate}</p>
-        <p><strong>Pages:</strong> {book.pageCount}</p>
-      </div>
-    </div>
-  );
+    if (loading) return <p>Loading...</p>;
+    if (books.length === 0) return <p>No books currently reading.</p>;
 
-  return (
-    <div>
-      {loading ? <p>Loading...</p> : books.length === 0 ? <p>No currently reading books.</p> : books.map(book => <BookCard key={book.id} book={book} />)}
-    </div>
-  );
+    return (
+        <div className="currently-reading">
+            <p className="header">Current Book</p>
+            {books.map(book => (
+                <div key={book.id} className="book">
+                    <div className="cover">
+                        <img src={book.thumbnail} alt={book.title} />
+                    </div>
+                    <div>
+                        <p className="title">{book.title}</p>
+                        {book.authors?.length > 0 && <p className="author">{book.authors.join(", ")}</p>}
+                        <p className="pages">{book.pageCount} pages</p>
+                        <p className="description">{book.description}</p>
+                        <button className="read" onClick={() => markRead(book.id)}>Read</button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
 }

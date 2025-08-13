@@ -57,7 +57,7 @@ export default function BookSearch({ onBookSaved }) {
   };
 
   return (
-    <div>
+    <div className="searched-books">
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
         <input
           type="text"
@@ -75,18 +75,20 @@ export default function BookSearch({ onBookSaved }) {
 
       <div style={{ display: "grid", gap: "1rem" }}>
         {results.map(book => (
-          <div key={book.id} style={{ display: "flex", gap: "1rem", border: "1px solid #ccc", padding: "1rem", borderRadius: "4px", alignItems: "flex-start" }}>
-            <img src={book.thumbnail} alt={book.title} style={{ width: 128, objectFit: "cover" }} />
-            <div style={{ flex: 1 }}>
-              <h2>{book.title}</h2>
-              {book.authors.length > 0 && <p><strong>Authors:</strong> {book.authors.join(", ")}</p>}
-              <p><strong>Published:</strong> {book.publishedDate}</p>
-              <p><strong>Pages:</strong> {book.pageCount}</p>
-              {book.averageRating && <p><strong>Average Rating:</strong> {book.averageRating}</p>}
-              {book.description && <p>{book.description.length > 200 ? book.description.substring(0, 200) + "…" : book.description}</p>}
-              <button onClick={() => saveBook(book)}>Save to Next Books</button>
+          <div key={book.id} className="book">
+            <div className="cover">
+                <img src={book.thumbnail} alt={book.title} />
             </div>
-          </div>
+            <div>
+                <p className="title">{book.title}</p>
+                {book.authors?.length > 0 && <p className="author">{book.authors.join(", ")}</p>}
+                <p className="pages">{book.pageCount} pages</p>
+                <p className="description">{book.description}</p>
+                <div className="buttons">
+                    <button className="save" onClick={() => saveBook(book)}>Save</button>
+                </div>
+            </div>
+        </div>
         ))}
       </div>
     </div>
