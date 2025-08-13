@@ -58,22 +58,21 @@ export default function BookSearch({ onBookSaved }) {
 
   return (
     <div className="searched-books">
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+      <div>
         <input
           type="text"
           value={query}
           placeholder="Search by title, author, or ISBN"
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && searchBooks()}
-          style={{ flex: 1, padding: "0.5rem" }}
         />
-        <button onClick={searchBooks} style={{ padding: "0.5rem 1rem" }}>Search</button>
+        <button onClick={searchBooks}>Search</button>
       </div>
 
       {loading && <p>Searching...</p>}
       {!loading && results.length === 0 && searched && <p>No results found.</p>}
 
-      <div style={{ display: "grid", gap: "1rem" }}>
+      <div>
         {results.map(book => (
           <div key={book.id} className="book">
             <div className="cover">

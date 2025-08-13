@@ -8,7 +8,7 @@ export default function App() {
   const [page, setPage] = useState("currentlyReading");
 
   return (
-    <div style={{ maxWidth: 800, margin: "2rem auto", padding: "1rem" }}>
+    <div>
       <p className="app-title">Book Club Tracker</p>
 
       <nav className="navbar">
