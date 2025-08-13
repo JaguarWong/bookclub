@@ -58,7 +58,7 @@ export default function BookSearch({ onBookSaved }) {
 
   return (
     <div className="searched-books">
-      <div>
+      <div className="search-box">
         <input
           type="text"
           value={query}
@@ -72,13 +72,13 @@ export default function BookSearch({ onBookSaved }) {
       {loading && <p>Searching...</p>}
       {!loading && results.length === 0 && searched && <p>No results found.</p>}
 
-      <div>
+      <div className="search-results">
         {results.map(book => (
           <div key={book.id} className="book">
             <div className="cover">
                 <img src={book.thumbnail} alt={book.title} />
             </div>
-            <div>
+            <div className="book">
                 <p className="title">{book.title}</p>
                 {book.authors?.length > 0 && <p className="author">{book.authors.join(", ")}</p>}
                 <p className="pages">{book.pageCount} pages</p>
