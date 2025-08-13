@@ -9,7 +9,7 @@ export default function NextBooks() {
         setLoading(true);
         const q = query(collection(db, "books"), where("status", "==", "Save"));
         const snapshot = await getDocs(q);
-        setBooks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setBooks(snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() })));
         setLoading(false);
     };
 
@@ -41,7 +41,7 @@ export default function NextBooks() {
     };
 
     const BookCard = ({ book }) => (
-        <div key={book.id} className="book">
+        <div key={book.docId} className="book">
             <div className="cover">
                 <img src={book.thumbnail} alt={book.title} />
             </div>
@@ -51,8 +51,8 @@ export default function NextBooks() {
                 <p className="pages">{book.pageCount} pages</p>
                 <p className="description">{book.description}</p>
                 <div className="buttons">
-                    <button className="read" onClick={() => updateBookStatus(book.id, "Reading")}>Read Book</button>
-                    <button className="delete" onClick={() => deleteBook(book.id)}>Delete</button>
+                    <button className="read" onClick={() => updateBookStatus(book.docId, "Reading")}>Read Book</button>
+                    <button className="delete" onClick={() => deleteBook(book.docId)}>Delete</button>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@ export default function NextBooks() {
 
     return (
         <div className="future-books">
-            {loading ? <p>Loading...</p> : books.length === 0 ? <p>No next books saved.</p> : books.map(book => <BookCard key={book.id} book={book} />)}
+            {loading ? <p>Loading...</p> : books.length === 0 ? <p>No next books saved.</p> : books.map(book => <BookCard key={book.docId} book={book} />)}
         </div>
     );
 }

@@ -24,7 +24,7 @@ export default function CurrentlyReading() {
         const bookRef = doc(db, "books", bookId);
         await updateDoc(bookRef, { status: "Read", readDate, timestamp: serverTimestamp() });
 
-        setBooks(prevBooks => prevBooks.filter(book => book.id !== bookId));
+        setBooks(prevBooks => prevBooks.filter(book => book.docId !== bookId));
     };
 
     if (loading) return <p>Loading...</p>;
@@ -33,7 +33,7 @@ export default function CurrentlyReading() {
     return (
         <div className="currently-reading">
             {books.map(book => (
-                <div key={book.id} className="book">
+                <div key={book.docId} className="book">
                     <div className="cover">
                         <img src={book.thumbnail} alt={book.title} />
                     </div>
@@ -42,7 +42,7 @@ export default function CurrentlyReading() {
                         {book.authors?.length > 0 && <p className="author">{book.authors.join(", ")}</p>}
                         <p className="pages">{book.pageCount} pages</p>
                         <p className="description">{book.description}</p>
-                        <button className="read" onClick={() => markRead(book.id)}>Read</button>
+                        <button className="read" onClick={() => markRead(book.docId)}>Read</button>
                     </div>
                 </div>
             ))}

@@ -10,14 +10,14 @@ export default function ReadBooks() {
             setLoading(true);
             const q = query(collection(db, "books"), where("status", "==", "Read"), orderBy("readDate", "desc"));
             const snapshot = await getDocs(q);
-            setBooks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            setBooks(snapshot.docs.map(doc => ({ id: doc.docId, ...doc.data() })));
             setLoading(false);
         };
         fetchBooks();
     }, []);
 
     const BookCard = ({ book }) => (
-        <div key={book.id} className="book">
+        <div key={book.docId} className="book">
             <div className="cover">
                 <img src={book.thumbnail} alt={book.title} />
             </div>
@@ -33,7 +33,7 @@ export default function ReadBooks() {
 
     return (
         <div className="read-books">
-            {loading ? <p>Loading...</p> : books.length === 0 ? <p>No books read yet.</p> : books.map(book => <BookCard key={book.id} book={book} />)}
+            {loading ? <p>Loading...</p> : books.length === 0 ? <p>No books read yet.</p> : books.map(book => <BookCard key={book.docId} book={book} />)}
         </div>
     );
 }
