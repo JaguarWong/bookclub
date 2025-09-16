@@ -10,21 +10,21 @@ export default function CurrentlyReading() {
             setLoading(true);
             const q = query(collection(db, "books"), where("status", "==", "Reading"));
             const snapshot = await getDocs(q);
-            const booksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const booksData = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
             setBooks(booksData);
             setLoading(false);
         };
         fetchBooks();
     }, []);
 
-    const markRead = async (bookId) => {
+    const markRead = async (docId) => {
         const readDate = prompt("Enter the date you finished reading (YYYY-MM-DD):");
         if (!readDate) return;
 
-        const bookRef = doc(db, "books", bookId);
+        const bookRef = doc(db, "books", docId);
         await updateDoc(bookRef, { status: "Read", readDate, timestamp: serverTimestamp() });
 
-        setBooks(prevBooks => prevBooks.filter(book => book.docId !== bookId));
+        setBooks(prevBooks => prevBooks.filter(book => book.docId !== docId));
     };
 
     if (loading) return <p>Loading...</p>;
